@@ -7,6 +7,11 @@ module.exports = {
 		const {customId, values, fields, member, user, guild, commandName, channel, guildId, message, } = interaction;
         if (interaction.isChatInputCommand()) {
             const command = client.commands.get(commandName);
+            const blacklistedUsers = ["all", "disallowed", "uids"];
+
+            if (command && blacklistedUsers.includes(interaction.member.id)) {
+                return interaction.reply({content: 'You\'re blacklisted from using my commands.', ephemeral: true})
+            }
             
             if (!command || !checkWhitelist ) {
                 return interaction.reply({
@@ -31,7 +36,7 @@ module.exports = {
 };
 
 function checkWhitelist (interaction, command) {
-    const uidWhitelist = ["622171121151770624", "758653252211441664", "399912356659855361" ]; // 1: spag. 2: seaotter, 3: james
+    const uidWhitelist = ["all","allowed","uids" ];
     
     if (command.whitelist) {
         return uidWhitelist.includes(interaction.member.id);
